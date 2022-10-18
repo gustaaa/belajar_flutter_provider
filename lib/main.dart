@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 
 void main() {
   runApp(
-    Provider(
+    ChangeNotifierProvider(
       create: (_) => Person(name: "gusta", age: 20),
       child: MyApp(),
     ),
@@ -44,6 +44,14 @@ class MyNamePage extends StatelessWidget {
           Hi ${Provider.of<Person>(context).name}!
           You are ${Provider.of<Person>(context).age} years old''',
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        // this is where there's a difference.
+        // when the FAB is tapped, it will call `Person.icreaseAge()` on the
+        // person instance that was created by provider.
+        onPressed: () =>
+            Provider.of<Person>(context, listen: false).increaseAge(),
+        child: const Icon(Icons.add),
       ),
     );
   }
