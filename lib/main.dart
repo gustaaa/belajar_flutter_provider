@@ -1,5 +1,3 @@
-import 'dart:js';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_provider/person.dart';
 import 'package:provider/provider.dart';
@@ -8,7 +6,7 @@ void main() {
   runApp(
     ChangeNotifierProvider(
       create: (_) => Person(name: "gusta", age: 20),
-      child: MyApp(),
+      child: const MyApp(),
     ),
   );
 }
@@ -34,27 +32,29 @@ class MyNamePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<Person>(builder: (context, person, _) {
-      return Scaffold(
-        appBar: AppBar(
-          title: Text("Belajar Provider"),
-        ),
-        body: Center(
-          child: Text(
-            '''
-          Hi ${person.name}!
-          You are ${person.age} years old''',
-          ),
-        ),
-        floatingActionButton: FloatingActionButton(
-          // this is where there's a difference.
-          // when the FAB is tapped, it will call `Person.icreaseAge()` on the
-          // person instance that was created by provider.
-          onPressed: () => person.increaseAge(),
-          child: const Icon(Icons.add),
-        ),
-      );
-    });
+    return Selector<Person, String>(
+        selector: (BuildContext context, Person person) => person.name,
+        builder: (context, String name, child) {
+          return Scaffold(
+            appBar: AppBar(
+              title: const Text("Belajar Provider"),
+            ),
+            body: Center(
+              child: Text(
+                '''
+          Hi $name!
+          You are ${Provider.of<Person>(context).age} years old''',
+              ),
+            ),
+            floatingActionButton: FloatingActionButton(
+              // this is where there's a difference.
+              // when the FAB is tapped, it will call `Person.icreaseAge()` on the
+              // person instance that was created by provider.
+              onPressed: () => Provider.of<Person>(context).increaseAge(),
+              child: const Icon(Icons.add),
+            ),
+          );
+        });
   }
 }
 

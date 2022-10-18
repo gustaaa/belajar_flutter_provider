@@ -11,7 +11,7 @@ class Person with ChangeNotifier {
   });
 
   void increaseAge() {
-    this.age++;
+    age++;
     notifyListeners();
   }
 }
