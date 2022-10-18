@@ -4,9 +4,13 @@ import 'package:provider/provider.dart';
 
 void main() {
   runApp(
-    ChangeNotifierProvider(
+    Provider(
       create: (_) => Person(name: "gusta", age: 20),
-      child: const MyApp(),
+      child: FutureProvider<String>(
+        create: (context) => Home().fetchAddress,
+        initialData: "Fletching Addres",
+        child: const MyApp(),
+      ),
     ),
   );
 }
@@ -32,29 +36,30 @@ class MyNamePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Selector<Person, String>(
-        selector: (BuildContext context, Person person) => person.name,
-        builder: (context, String name, child) {
-          return Scaffold(
-            appBar: AppBar(
-              title: const Text("Belajar Provider"),
-            ),
-            body: Center(
-              child: Text(
-                '''
-          Hi $name!
-          You are ${Provider.of<Person>(context).age} years old''',
-              ),
-            ),
-            floatingActionButton: FloatingActionButton(
-              // this is where there's a difference.
-              // when the FAB is tapped, it will call `Person.icreaseAge()` on the
-              // person instance that was created by provider.
-              onPressed: () => Provider.of<Person>(context).increaseAge(),
-              child: const Icon(Icons.add),
-            ),
-          );
-        });
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Future Provider"),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Center(
+          child: Consumer<Person>(
+            builder: (context, Person person, child) {
+              return Column(
+                children: <Widget>[
+                  const Text("User profile:"),
+                  Text("name: ${person.name}"),
+                  Text("age: ${person.age}"),
+                  Consumer<String>(builder: (context, String address, child) {
+                    return Text("address: $address");
+                  }),
+                ],
+              );
+            },
+          ),
+        ),
+      ),
+    );
   }
 }
 
