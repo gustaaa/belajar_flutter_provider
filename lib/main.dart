@@ -4,29 +4,12 @@ import 'package:provider/provider.dart';
 
 void main() {
   runApp(
-    MultiProvider(
-      providers: [
-        Provider(
-          create: (context) => Person(
-            name: "gusta",
-            age: 20,
-          ),
-        ),
-        FutureProvider(
-          create: (context) => Home().fetchAddress,
-          initialData: "Fletching Addres",
-        ),
-      ],
+    StreamProvider<String>(
+      create: (_) => Person(name: 'gusta', age: 20).umur,
+      initialData: 25.toString(),
+      catchError: (_, error) => error.toString(),
       child: const MyApp(),
     ),
-    // Provider(
-    //   create: (_) => Person(name: "gusta", age: 20),
-    //   child: FutureProvider<String>(
-    //     create: (context) => Home().fetchAddress,
-    //     initialData: "Fletching Addres",
-    //     child: const MyApp(),
-    //   ),
-    // ),
   );
 }
 
@@ -58,16 +41,22 @@ class MyNamePage extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Center(
-          child: Consumer<Person>(
-            builder: (context, Person person, child) {
+          child: Consumer<String>(
+            builder: (context, String umur, child) {
               return Column(
                 children: <Widget>[
-                  const Text("User profile:"),
-                  Text("name: ${person.name}"),
-                  Text("age: ${person.age}"),
-                  Consumer<String>(builder: (context, String address, child) {
-                    return Text("address: $address");
-                  }),
+                  const Text(
+                    "Watch gusta's age...",
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  const Text(
+                    "Name: gusta",
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  Text(
+                    "Age: $umur",
+                    style: TextStyle(fontSize: 20),
+                  ),
                 ],
               );
             },
