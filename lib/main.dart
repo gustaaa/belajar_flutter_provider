@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_provider/countdown.dart';
 import 'package:flutter_provider/person.dart';
 import 'package:provider/provider.dart';
 
 void main() {
   runApp(
-    StreamProvider<String>(
-      create: (_) => Person(name: 'gusta', age: 20).umur,
-      initialData: 25.toString(),
-      catchError: (_, error) => error.toString(),
+    MultiProvider(
+      providers: [
+        StreamProvider<String>(
+          create: (_) => Countdown.start(),
+          initialData: "Begin countdown...",
+          catchError: (_, error) => error.toString(),
+        ),
+        ChangeNotifierProvider<Person>(
+          create: (_) => Person(name: 'gusta', age: 20),
+        ),
+      ],
       child: const MyApp(),
     ),
   );
@@ -36,32 +44,25 @@ class MyNamePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Future Provider"),
+        title: const Text("Context extensions"),
       ),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Center(
-          child: Consumer<String>(
-            builder: (context, String umur, child) {
-              return Column(
-                children: <Widget>[
-                  const Text(
-                    "Watch gusta's age...",
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  const Text(
-                    "Name: gusta",
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  Text(
-                    "Age: $umur",
-                    style: TextStyle(fontSize: 20),
-                  ),
-                ],
-              );
-            },
+          child: Column(
+            children: <Widget>[
+              Text("Name: ${Provider.of<Person>(context).name}"),
+              Text("context.select: ${context.select((Person p) => p.age)}"),
+              Text("context.watch: ${context.watch<String>()}"),
+            ],
           ),
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          context.read<Person>().increaseAge();
+        },
+        child: const Icon(Icons.add),
       ),
     );
   }

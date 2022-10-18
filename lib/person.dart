@@ -10,13 +10,13 @@ class Person with ChangeNotifier {
     required this.age,
   });
 
-  Stream<String> get umur async* {
-    var i = age;
-    while (i < 85) {
-      await Future.delayed(const Duration(seconds: 1), () {
-        i++;
-      });
-      yield i.toString();
-    }
+  void increaseAge() {
+    age++;
+    notifyListeners();
+  }
+
+  void changeName() {
+    name = "Gustania";
+    notifyListeners();
   }
 }
