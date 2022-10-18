@@ -34,26 +34,27 @@ class MyNamePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Belajar Provider"),
-      ),
-      body: Center(
-        child: Text(
-          '''
-          Hi ${Provider.of<Person>(context).name}!
-          You are ${Provider.of<Person>(context).age} years old''',
+    return Consumer<Person>(builder: (context, person, _) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text("Belajar Provider"),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        // this is where there's a difference.
-        // when the FAB is tapped, it will call `Person.icreaseAge()` on the
-        // person instance that was created by provider.
-        onPressed: () =>
-            Provider.of<Person>(context, listen: false).increaseAge(),
-        child: const Icon(Icons.add),
-      ),
-    );
+        body: Center(
+          child: Text(
+            '''
+          Hi ${person.name}!
+          You are ${person.age} years old''',
+          ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          // this is where there's a difference.
+          // when the FAB is tapped, it will call `Person.icreaseAge()` on the
+          // person instance that was created by provider.
+          onPressed: () => person.increaseAge(),
+          child: const Icon(Icons.add),
+        ),
+      );
+    });
   }
 }
 
