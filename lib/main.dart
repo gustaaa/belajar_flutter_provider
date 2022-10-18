@@ -4,14 +4,29 @@ import 'package:provider/provider.dart';
 
 void main() {
   runApp(
-    Provider(
-      create: (_) => Person(name: "gusta", age: 20),
-      child: FutureProvider<String>(
-        create: (context) => Home().fetchAddress,
-        initialData: "Fletching Addres",
-        child: const MyApp(),
-      ),
+    MultiProvider(
+      providers: [
+        Provider(
+          create: (context) => Person(
+            name: "gusta",
+            age: 20,
+          ),
+        ),
+        FutureProvider(
+          create: (context) => Home().fetchAddress,
+          initialData: "Fletching Addres",
+        ),
+      ],
+      child: const MyApp(),
     ),
+    // Provider(
+    //   create: (_) => Person(name: "gusta", age: 20),
+    //   child: FutureProvider<String>(
+    //     create: (context) => Home().fetchAddress,
+    //     initialData: "Fletching Addres",
+    //     child: const MyApp(),
+    //   ),
+    // ),
   );
 }
 
